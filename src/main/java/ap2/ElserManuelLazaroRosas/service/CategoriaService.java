@@ -1,59 +1,21 @@
 package ap2.ElserManuelLazaroRosas.service;
 
+import ap2.ElserManuelLazaroRosas.model.Categoria;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
+public interface CategoriaService {
+    List<Categoria> listar();
 
-import ap2.ElserManuelLazaroRosas.model.Categoria;
-import ap2.ElserManuelLazaroRosas.repository.CategoriaRepository;
-import lombok.RequiredArgsConstructor;
+    Optional<Categoria> buscarPorId(int id);
 
-@Service
-@RequiredArgsConstructor
-public class CategoriaService {
+    Categoria guardar(Categoria c);
 
-    private final CategoriaRepository repository;
+    Categoria actualizar(int id, Categoria c);
 
-    public List<Categoria> listar() {
-        return repository.findByActivoTrue();
-    }
+    void eliminar(int id);
 
-    public Optional<Categoria> buscarPorId(int id) {
-        return repository.findById(id);
-    }
+    Categoria cambiarEstado(int id, Boolean activo);
 
-    public Categoria guardar(Categoria c) {
-        if (c.getActivo() == null) {
-            c.setActivo(true);
-        }
-        return repository.save(c);
-    }
-
-    public Categoria actualizar(int id, Categoria c) {
-        return repository.findById(id).map(existing -> {
-            existing.setNombre(c.getNombre());
-            existing.setDescripcion(c.getDescripcion());
-            return repository.save(existing);
-        }).orElseThrow(() -> new RuntimeException("Categoria no encontrada: " + id));
-    }
-
-    public void eliminar(int id) {
-        repository.findById(id).ifPresent(c -> {
-            c.setActivo(false);
-            repository.save(c);
-        });
-    }
-
-    public Categoria cambiarEstado(int id, Boolean activo) {
-        return repository.findById(id).map(existing -> {
-            existing.setActivo(activo);
-            return repository.save(existing);
-        }).orElseThrow(() -> new RuntimeException("Categoria no encontrada: " + id));
-    }
-
-    public List<Categoria> listarTodos() {
-        return repository.findAll();
-    }
-
+    List<Categoria> listarTodos();
 }

@@ -1,39 +1,19 @@
 package ap2.ElserManuelLazaroRosas.service;
 
 import ap2.ElserManuelLazaroRosas.model.DetallePedido;
-import ap2.ElserManuelLazaroRosas.repository.DetallePedidoRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class DetallePedidoService {
+public interface DetallePedidoService {
+    List<DetallePedido> listar();
 
-    private final DetallePedidoRepository repository;
+    Optional<DetallePedido> buscarPorId(int id);
 
-    public List<DetallePedido> listar() {
-        return repository.findAll();
-    }
+    List<DetallePedido> listarPorPedido(int idPedido);
 
-    public Optional<DetallePedido> buscarPorId(int id) {
-        return repository.findById(id);
-    }
+    DetallePedido guardar(DetallePedido d);
 
-    public List<DetallePedido> listarPorPedido(int idPedido) {
-        return repository.findByPedido_IdPedido(idPedido);
-    }
+    void eliminar(int id);
 
-    public DetallePedido guardar(DetallePedido d) {
-        return repository.save(d);
-    }
-
-    public void eliminar(int id) {
-        repository.deleteById(id);
-    }
-
-    public void eliminarPorPedido(int idPedido) {
-        repository.deleteByPedido_IdPedido(idPedido);
-    }
+    void eliminarPorPedido(int idPedido);
 }

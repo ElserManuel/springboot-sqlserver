@@ -1,55 +1,21 @@
 package ap2.ElserManuelLazaroRosas.service;
 
 import ap2.ElserManuelLazaroRosas.model.Pedido;
-import ap2.ElserManuelLazaroRosas.repository.PedidoRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class PedidoService {
+public interface PedidoService {
+    List<Pedido> listar();
 
-    private final PedidoRepository repository;
+    Optional<Pedido> buscarPorId(int id);
 
-    public List<Pedido> listar() {
-        return repository.findAll();
-    }
+    Pedido guardar(Pedido p);
 
-    public Optional<Pedido> buscarPorId(int id) {
-        return repository.findById(id);
-    }
+    Pedido actualizar(int id, Pedido p);
 
-    public Pedido guardar(Pedido p) {
-        if (p.getFechaPedido() == null)
-            p.setFechaPedido(LocalDateTime.now());
-        return repository.save(p);
-    }
+    void eliminar(int id);
 
-    public Pedido actualizar(int id, Pedido p) {
-        return repository.findById(id).map(existing -> {
-            existing.setEstado(p.getEstado());
-            existing.setMetodoPago(p.getMetodoPago());
-            existing.setObservacion(p.getObservacion());
-            existing.setSubtotal(p.getSubtotal());
-            existing.setDescuento(p.getDescuento());
-            existing.setIgv(p.getIgv());
-            existing.setTotal(p.getTotal());
-            return repository.save(existing);
-        }).orElseThrow(() -> new RuntimeException("Pedido no encontrado: " + id));
-    }
+    List<Pedido> listarPorCliente(int idCliente);
 
-    public void eliminar(int id) {
-        repository.deleteById(id);
-    }
-
-    public List<Pedido> listarPorCliente(int idCliente) {
-        return repository.findByCliente_IdClienteOrderByFechaPedidoDesc(idCliente);
-    }
-
-    public List<Pedido> listarPorEstado(String estado) {
-        return repository.findByEstado(estado);
-    }
+    List<Pedido> listarPorEstado(String estado);
 }
